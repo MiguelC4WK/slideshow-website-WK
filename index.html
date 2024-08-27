@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slideshow</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+        .slide {
+            display: none;
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+        .active {
+            display: block;
+        }
+        .data-box {
+            position: absolute;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            font-size: 24px;
+            color: #000;
+        }
+        .pos_01 { top: 20%; left: 10%; }
+        .pos_02 { top: 50%; left: 20%; }
+        .pos_03 { top: 70%; left: 40%; }
+
+        /* Clock Style */
+        .clock {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            font-size: 18px;
+            font-family: Arial, sans-serif;
+            border-radius: 5px;
+        }
+
+        /* Logo Style */
+        .logo {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            width: 180px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <img src="Wolters_Kluwer_Logo.svg.png" alt="Logo" class="logo">
+    <div id="clock" class="clock"></div>
+
+    <div id="slide_01" class="slide">
+        <!-- Content for Slide 1 will be dynamically added here -->
+    </div>
+    <div id="slide_02" class="slide">
+        <!-- Content for Slide 2 will be dynamically added here -->
+    </div>
+
+    <script>
+        function updateClock() {
+            const clockElement = document.getElementById('clock');
+            const now = new Date();
+            const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+            const formattedDate = now.toLocaleDateString(undefined, options);
+            const formattedTime = now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            clockElement.innerHTML = `${formattedDate} ${formattedTime}`;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock(); // Initial call to display the clock immediately
+
+        // Data Table
+        const dataTable = [
+            { slide: 'Slide_01', position: 'pos_01', name: 'Sales', value: '8000' },
+            { slide: 'Slide_01', position: 'pos_02', name: 'Revenue', value: '$15000' },
+            { slide: 'Slide_01', position: 'pos_03', name: 'Growth', value: '12%' },
+            { slide: 'Slide_02', position: 'pos_01', name: 'Leads', value: '500' },
+            { slide: 'Slide_02', position: 'pos_02', name: 'Conversions', value: '120' },
+            { slide: 'Slide_02', position: 'pos_03', name: 'Bounce Rate', value: '45%' },
+        ];
+
+        // Function to generate slides based on data table
+        function generateSlides() {
+            dataTable.forEach(item => {
+                const slideElement = document.getElementById(item.slide.toLowerCase());
+                const dataBox = document.createElement('div');
+                dataBox.classList.add('data-box', item.position.toLowerCase());
+                dataBox.innerHTML = `<strong>${item.name}:</strong> ${item.value}`;
+                slideElement.appendChild(dataBox);
+            });
+        }
+
+        // Slideshow logic
+        let currentSlide = 0;
+        const slides = document.getElementsByClassName('slide');
+
+        function showSlide(index) {
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].classList.remove('active');
+            }
+            slides[index].classList.add('active');
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        // Initialize the slideshow
+        generateSlides();
+        showSlide(0); // Show the first slide
+        setInterval(nextSlide, 5000); // Change slide every 5 seconds
+    </script>
+</body>
+</html>
